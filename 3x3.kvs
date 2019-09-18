@@ -1,0 +1,20 @@
+
+configure -name kvstore
+plan deploy-zone -name "Bogota" -rf 3 -wait
+
+#### First Storage Node ####
+plan deploy-sn -znname "Bogota" -port 5000 -wait -host kvhost01
+plan deploy-admin -sn sn1 -wait
+
+#### Second Storage Node ####
+plan deploy-sn -znname "Bogota" -port 6000 -wait -host kvhost02
+plan deploy-admin -sn sn2 -wait
+
+#### Third Storage Node ####
+plan deploy-sn -znname "Bogota" -port 7000 -wait -host kvhost03
+plan deploy-admin -sn sn3 -wait
+
+#### Creating topology, preview it and then deploy it ####
+topology create -name 3x3 -pool AllStorageNodes -partitions 120
+topology preview -name 3x3
+plan deploy-topology -name 3x3 -wait
